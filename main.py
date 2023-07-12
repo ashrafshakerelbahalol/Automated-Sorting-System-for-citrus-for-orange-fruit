@@ -8,7 +8,7 @@ from customtkinter import *
 import matplotlib.pyplot as plt
 
 app = CTk()
-app.config ( bg="#5d3891")
+app.config ( bg="#fcfefd")
 set_appearance_mode("DARK")
 app.title("Automated Sorting System for citrus")
 app.geometry("1000x700")
@@ -20,16 +20,19 @@ def button_callback():
     new_window.geometry("300x300")
     # Set the window title
     new_window.title("New Window")
+
     new_window.mainloop()
 def open_image():
     # Create a Toplevel window
     new_window = Toplevel(app)
     # Set the window size
-    new_window.geometry("800x600")
+    new_window.geometry("1000x750")
     # Set the window title
     new_window.title("New Window")
+
+    new_window.resizable(False, False)
     Img = Image.open(path)
-    my_image2 = CTkImage(light_image=Img, size=(800, 600))
+    my_image2 = CTkImage(light_image=Img,size=(800,600))
     CTkLabel(new_window, image=my_image2, text="").place(x=0, y=0)
     new_window.mainloop()
 def read_img():
@@ -42,8 +45,6 @@ def read_img():
 
 def start_flow():
 
-
-    global my_list
     my_list = [["N4","premium", 29, 36,70], ["N3","class 1", 57, 66,30], ["N&7","class 3", 80, 90,30], ["NM#9","class 2", 80, 90,30]]
     table1 = ttk.Treeview(app)
 
@@ -177,19 +178,19 @@ def start_flow():
         print(e)
 ##buttons##
 button2 = CTkButton(app, text="history", command=button_callback, fg_color="dark orange",text_color="#000000"
-                    , bg_color= "#5d3891" ,hover_color="#e8e2e2")
+                    , bg_color= "#fcfefd" ,hover_color="#e8e2e2")
 button4 = CTkButton(app, text="detect orange", fg_color="dark orange",text_color="#000000"
-                    , bg_color="#5d3891"  ,hover_color="#e8e2e2")
+                    , bg_color="#fcfefd"  ,hover_color="#e8e2e2")
 button5 = CTkButton(app, text="classify orange", fg_color="dark orange",text_color="#000000"
-                    , bg_color="#5d3891"  ,hover_color="#e8e2e2")
+                    , bg_color="#fcfefd"  ,hover_color="#e8e2e2")
 button6 = CTkButton(app, text="sort healthy",  fg_color="dark orange",text_color="#000000"
-                   , bg_color="#5d3891"   ,hover_color="#e8e2e2")
+                   , bg_color="#fcfefd"   ,hover_color="#e8e2e2")
 button3 = CTkButton(app, text="automatic",command=start_flow,  fg_color="dark orange",text_color="#000000"
-                    , bg_color="#5d3891" ,hover_color="#e8e2e2")
+                    , bg_color="#fcfefd" ,hover_color="#e8e2e2")
 button1 = CTkButton(app, text="read image", command=read_img, fg_color="dark orange",text_color="#000000"
-                    , bg_color="#5d3891" ,hover_color="#e8e2e2")
+                    , bg_color="#fcfefd" ,hover_color="#e8e2e2")
 button7 = CTkButton(app, text="input image", command=open_image, fg_color="dark orange",text_color="#000000"
-                    , bg_color="#5d3891" ,hover_color="#e8e2e2")
+                    , bg_color="#fcfefd" ,hover_color="#e8e2e2")
 button1.place(x=400, y=150)
 button2.place(x=400, y=200)
 button3.place(x=400, y=250)
@@ -198,24 +199,24 @@ button5.place(x=400, y=350)
 button6.place(x=400, y=400)
 button7.place(x=100, y=410)
 ##frames
-frame1 = CTkFrame(app,width=250,height=200,bg_color="#5d3891")
+frame1 = CTkFrame(app,width=250,height=200,bg_color="#fcfefd")
 frame1.place(x=50, y=200)
-frame2 = CTkFrame(app,width=250,height=200,bg_color="#5d3891")
+frame2 = CTkFrame(app,width=250,height=200,bg_color="#fcfefd")
 frame2.place(x=600, y=200)
 
 ##ctkimage
 #logo
-my_image1 = CTkImage(light_image= Image.open("Automated Sorting System for citrus for orange fruit.png"), size=(100, 100))
-image_label1 = CTkLabel(app, image=my_image1,text="").place(x=10,y=10)
+my_image1 = CTkImage(light_image= Image.open("logo.jpg"), size=(200, 200))
+image_label1 = CTkLabel(app, image=my_image1,text="").place(x=0,y=0)
 
 ##labels
-label1 = CTkLabel(app, text="input image" ,bg_color="#5d3891",text_color=("#f5f5f5","#f5f5f5"))
+label1 = CTkLabel(app, text="input image" ,bg_color="#fcfefd",text_color=("#000000","#000000"))
 label1.place(x=50,y=170)
-label2 = CTkLabel(app, text="result image" ,bg_color="#5d3891",text_color=("#f5f5f5","#f5f5f5"))
+label2 = CTkLabel(app, text="result image" ,bg_color="#fcfefd",text_color=("#000000","#000000"))
 label2.place(x=600, y=170)
-label3 = CTkLabel(app, text="result for current image" ,bg_color="#5d3891",text_color=("#f5f5f5","#f5f5f5"))
+label3 = CTkLabel(app, text="result for current image" ,bg_color="#fcfefd",text_color=("#000000","#000000"))
 label3.place(x=30,y=670)
-label4 = CTkLabel(app, text="result for all previous image" ,bg_color="#5d3891",text_color=("#f5f5f5","#f5f5f5"))
+label4 = CTkLabel(app, text="result for all previous image" ,bg_color="#fcfefd",text_color=("#000000","#000000"))
 label4.place(x=550,y=670)
 ##the output
 # Create a Canvas widget
