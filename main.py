@@ -3,10 +3,16 @@ import time
 from tkinter import ttk
 from tkinter import Toplevel, Canvas
 from tkinter import *
+
+import cv2
 from PIL import Image, ImageTk
 from customtkinter import *
 import matplotlib.pyplot as plt
-
+from background import background_removel
+from detect import detection_oranges
+from size import size_oranges
+from color import color_oranges
+from automatic import automtic_oranges
 app = CTk()
 app.config ( bg="#fcfefd")
 set_appearance_mode("DARK")
@@ -75,7 +81,7 @@ def HistoryWindow():
                    table1.place(x=10, y=610)
 
                    for row in table:
-                      table1.insert("", tk.END, values=(row[0], row[1], row[2], row[3], row[4]))
+                      table1.insert("", tk.END, values=("", "", row[2], "", row[4],""))
                    table1.pack(side=LEFT)
                    Label(table_frame,text="&&").pack(side=LEFT)
                    # Add color to the rows
@@ -101,7 +107,7 @@ def HistoryWindow():
                row = [str(value) for value in values]
                # Add the row to the table list
                table.append(row)
-               print(table)
+
     table1 = ttk.Treeview(table_frame)
     # Define the columns of the table
     table1["columns"] = ("name", "class", "size", "area", "color index", "blemish area")
@@ -125,7 +131,7 @@ def HistoryWindow():
     table1.place(x=10, y=610)
 
     for row in table:
-        table1.insert("", tk.END, values=(row[0], row[1], row[2], row[3], row[4]))
+        table1.insert("", tk.END, values=("", "", row[2], "", row[4],""))
     table1.pack(side=LEFT)
     # Add color to the rows
     table1.tag_configure("oddrow", background="#fcfe90")
@@ -151,15 +157,62 @@ def open_image():
     new_window.mainloop()
 def read_img():
     global Img, path
-    path = filedialog.askopenfilename(initialdir='/', title='Select the Image',filetypes=(('imagefiles', '.png'), ('imagefiles', '.jpg')))
+    path = filedialog.askopenfilename(initialdir='/', title='Select the Image',filetypes=(('imagefiles', '.png'), ('imagefiles', '.jpg'), ('imagefiles', '.bmp')))
     Img = Image.open(path)
     my_image2 = CTkImage(light_image= Img, size=(350, 300))
     CTkLabel(frame1, image=my_image2,text="").place(x=0, y=0)
     return path
 
-def start_flow(path):
+def backgroundRemovel():
+    # Perform orange detection
+    img = background_removel(path)
 
-    my_list = [["N4","premium", 29, 36,70,70], ["N3","class1", 57, 66,30,70], ["N&7","class3", 80, 90,30,70], ["NM#9","class2", 80, 90,30,70], ["NM#9","class2", 80, 90,30,70]]
+    # Save the detection result to a file
+    cv2.imwrite("background_removel.jpg", img)
+    Img = Image.open("background_removel.jpg")
+
+    # Display the detection result in Tkinter
+    my_image3 = CTkImage(light_image=Img, size=(350, 300))
+    CTkLabel(frame2, image=my_image3, text="").place(x=0, y=0)
+def detectImage():
+    # Perform orange detection
+    img = detection_oranges(path)
+    #ImageTk.PhotoImage(img)
+    # Save the detection result to a file
+    cv2.imwrite("detection_result.jpg", img)
+    Img = Image.open("detection_result.jpg")
+
+    # Display the detection result in Tkinter
+    my_image3 = CTkImage(light_image=Img, size=(350, 300))
+    CTkLabel(frame2, image=my_image3, text="").place(x=0, y=0)
+def colorIndex():
+    # Perform orange detection
+    img = color_oranges(path)
+
+    # Save the detection result to a file
+    cv2.imwrite("color_oranges.jpg", img)
+    Img = Image.open("color_oranges.jpg")
+
+    # Display the detection result in Tkinter
+    my_image3 = CTkImage(light_image=Img, size=(350, 300))
+    CTkLabel(frame2, image=my_image3, text="").place(x=0, y=0)
+def sizeOranges():
+    # Perform orange detection
+    img = size_oranges(path)
+
+    # Save the detection result to a file
+    cv2.imwrite("size_oranges.jpg", img)
+    Img = Image.open("size_oranges.jpg")
+
+    # Display the detection result in Tkinter
+    my_image3 = CTkImage(light_image=Img, size=(350, 300))
+    CTkLabel(frame2, image=my_image3, text="").place(x=0, y=0)
+
+def start_flow(path):
+    #my_list = [["N4", "premium", 29, 36, 70, 70], ["N3", "class1", 57, 66, 30, 70], ["N&7", "class3", 80, 90, 30, 70],
+    #  ["NM#9", "class2", 80, 90, 30, 70], ["NM#9", "class2", 80, 90, 30, 70]]
+    sizeList,colorIndexList=automtic_oranges(path)
+    my_list = [[0,0,sizeList[i],0, colorIndexList[i]] for i in range(len(sizeList))]
     table1 = ttk.Treeview(app)
     # Open a new file for writing
     with open('table_values.txt', 'a') as f:
@@ -197,7 +250,7 @@ def start_flow(path):
 
 
     for row in my_list:
-        table1.insert("", tk.END, values=(row[0], row[1], row[2], row[3],row[4]))
+        table1.insert("", tk.END, values=("", "", row[2], "",row[4],""))
 
 
     # Add color to the rows
@@ -251,7 +304,7 @@ def start_flow(path):
     # Add data to the total results table
 
     for row in my_list:
-        table2.insert("", tk.END, text=i, values=(row[0], row[1], row[2], row[3],row[4]))
+        table2.insert ("", tk.END, values=("", "", row[2], "",row[4]))
         i = 1 + i
     # Add color to the rows
     table2.tag_configure("oddrow", background="#fcfe90")
@@ -262,7 +315,7 @@ def start_flow(path):
         else:
             table2.item(item, tags=("oddrow",))
 
-    #
+    table2.place(x=750, y=610)
     values_list = []
     for item in table2.get_children():
         values = []
@@ -310,21 +363,22 @@ button2 = CTkButton(app, text="history", command=HistoryWindow, fg_color="dark o
                     , bg_color= "#fcfefd", hover_color="#e8e2e2")
 button3 = CTkButton(app, text="automatic",command=lambda: start_flow(path) ,fg_color="dark orange",text_color="#000000"
                     , bg_color="#fcfefd" ,hover_color="#e8e2e2")
-button4 = CTkButton(app, text="detect orange", fg_color="dark orange",text_color="#000000"
+button4 = CTkButton(app, text="detect oranges",command=detectImage, fg_color="dark orange",text_color="#000000"
                     , bg_color="#fcfefd"  ,hover_color="#e8e2e2")
-button5 = CTkButton(app, text="classify orange", fg_color="dark orange",text_color="#000000"
+button5 = CTkButton(app, text="background removel",command=backgroundRemovel, fg_color="dark orange",text_color="#000000"
                     , bg_color="#fcfefd"  ,hover_color="#e8e2e2")
-button6 = CTkButton(app, text="sort healthy",  fg_color="dark orange",text_color="#000000"
+button6 = CTkButton(app, text="color index",command=colorIndex , fg_color="dark orange",text_color="#000000"
                    , bg_color="#fcfefd"   ,hover_color="#e8e2e2")
-button7 = CTkButton(app, text="input image", command=open_image, fg_color="dark orange",text_color="#000000"
-                    , bg_color="#fcfefd" ,hover_color="#e8e2e2")
-button1.place(x=500, y=150)
-button2.place(x=500, y=200)
-button3.place(x=500, y=250)
-button4.place(x=500, y=300)
-button5.place(x=500, y=350)
-button6.place(x=500, y=400)
-button7.place(x=160, y=410)
+button7 = CTkButton(app, text="size oranges",command=sizeOranges , fg_color="dark orange",text_color="#000000"
+                   , bg_color="#fcfefd"   ,hover_color="#e8e2e2")
+
+button1.place(x=500, y=130)
+button2.place(x=500, y=180)
+button3.place(x=500, y=230)
+button4.place(x=500, y=280)
+button5.place(x=500, y=330)
+button6.place(x=500, y=380)
+button7.place(x=500, y=430)
 ##frames
 frame1 = CTkFrame(app,width=350,height=300,bg_color="#fcfefd")
 frame1.place(x=30, y=150)
@@ -373,7 +427,7 @@ table1.heading("size", text="size")
 table1.heading("area", text="area")
 table1.heading("color index", text="color index")
 table1.heading("blemish area", text="blemish area")
-table1.place(x=10, y=610)
+
 
 
 table2 = ttk.Treeview(app)
@@ -397,7 +451,7 @@ table2.heading("size", text="size")
 table2.heading("area", text="area")
 table2.heading("color index", text="color index")
 table2.heading("blemish area", text="blemish area")
-table2.place(x=750, y=610)
+
 
 
 app.mainloop()
